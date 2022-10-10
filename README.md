@@ -1,4 +1,4 @@
-# kingpin
+# kingpin 🎳
 
 _👀 Treed Gaussian process algorithm_
 
