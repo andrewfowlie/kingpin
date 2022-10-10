@@ -16,17 +16,12 @@ y[x > 7.55] = 100.
 noise = np.ones_like(x)
 p = np.linspace(x.min(), x.max(), 201)
 
-# Simple interface
-
-#rj = kp.tgp.from_data(x, y, noise, p)
-#rj.walk()
-#rj.show()
-
 # Bespoke choices
 
 model = kp.Celerite2(x, y, noise, p)
 
 # Priors and proposals for mean, sigma and length
+
 mean = kp.Uniform(0., 500.)
 sigma = kp.Uniform(0., 500.)
 length = kp.Uniform(0., 10.)
@@ -36,5 +31,7 @@ params = kp.Independent(mean, sigma, length)
 
 rj = kp.TGP(model, params)
 rj.walk(num_cores=1, n_iter=1000, n_burn=500)
+
+print(rj.acceptance)
 print(rj.arviz)
 rj.show()

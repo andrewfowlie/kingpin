@@ -12,17 +12,12 @@ x, y = np.loadtxt("motorcycle.txt", unpack=True)
 y -= y.min()
 p = np.linspace(x.min(), x.max(), 301)
 
-# Simple interface
-
-#rj = kp.kingpin(x, y, p=p)
-#rj.walk()
-#rj.show()
-
 # Bespoke choices
 
 model = kp.Celerite2(x, y, x_predict=p)
 
-# Priors and proposals for mean, sigma and length
+# Priors and proposals for mean, sigma, length and nugget
+
 mean = kp.Uniform(0., 150.)
 sigma = kp.Uniform(0., 500.)
 length = kp.Uniform(0., 50.)
@@ -33,6 +28,7 @@ params = kp.Independent(mean, sigma, length, nugget)
 
 rj = kp.TGP(model, params)
 rj.walk(thin=2, num_cores=1, n_iter=22000, n_burn=2000, n_iter_params=1, screen=False)
-rj.show()
+
 print(rj.acceptance)
 print(rj.arviz)
+rj.show()

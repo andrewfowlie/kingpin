@@ -21,6 +21,7 @@ def left_tree():
     tree.left.right = Tree(PARAMS)
     return tree
 
+
 def right_tree():
     tree = Tree(PARAMS)
     tree.left = Tree(PARAMS)
@@ -56,6 +57,7 @@ class TestTree(unittest.TestCase):
         self.assertTrue(tree.get_depth(tree.right) == 1)
         self.assertTrue(tree.get_depth(tree.left.right) == 2)
         self.assertTrue(tree.get_depth(tree.left.left) == 2)
+
 
 if __name__ == '__main__':
     unittest.main()

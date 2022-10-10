@@ -119,6 +119,7 @@ class Model(ABC):
         :return: Summaries to save and assess
         """
 
+
 class Celerite2(Model):
     """
     Gaussian process model for hadronic cross sections
@@ -133,7 +134,7 @@ class Celerite2(Model):
         :return: Log probability, mean and coviance for GP on one leaf
         """
         where = self.where(self.x_data, interval)
-        noise, y_data = self.apply_systematic(systematic)
+        noise = self.apply_systematic(systematic)[0]
 
         if len(params) == 3:
             mean, sigma, length = params
@@ -157,7 +158,7 @@ class Celerite2(Model):
         :return: Log probability, mean and coviance for GP on one leaf
         """
         gp_leaf = self.gp_leaf(interval, params, systematic)
-        noise, y_data = self.apply_systematic(systematic)
+        y_data = self.apply_systematic(systematic)[1]
 
         y_data = y_data[self.where(self.x_data, interval)]
         where = self.where(self.x_predict, interval)
@@ -186,7 +187,7 @@ class Celerite2(Model):
 
         :return: Log probability, mean and coviance for GP on one leaf
         """
-        noise, y_data = self.apply_systematic(systematic)
+        y_data = self.apply_systematic(systematic)[1]
         y_data = y_data[self.where(self.x_data, interval)]
         try:
             return self.gp_leaf(interval, params, systematic).log_likelihood(y_data)

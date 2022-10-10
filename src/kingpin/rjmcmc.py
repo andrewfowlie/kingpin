@@ -285,6 +285,7 @@ class RJMCMC:
                          )
             self.evaluate("systematic", log_alpha,
                           systematic=systematic, loglike=loglike)
+
     def params_step(self):
         """
         Markov steps on parameters

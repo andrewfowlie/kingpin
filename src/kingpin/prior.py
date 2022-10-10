@@ -114,9 +114,9 @@ class Normal(Prior):
         """
         :return: Log pdf ratio for normal distribution
         """
-        ll = ((params - self.mean) / self.sigma)**2 - ((other - self.mean) / self.sigma)**2
-        ll /= 2.
-        return np.sum(ll)
+        delta = (other - self.mean)**2 - (params - self.mean)**2
+        return -0.5 * np.sum(delta / self.sigma**2)
+
 
 class Proposal:
     """

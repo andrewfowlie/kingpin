@@ -45,7 +45,7 @@ class Recorder(dict):
         """
         Fetch record or make new one
         """
-        if not key in self:
+        if key not in self:
             self[key] = Record()
         return super().__getitem__(key)
 
