@@ -3,6 +3,8 @@ Thread multiple RJ-MCMC chains
 ==============================
 """
 
+from __future__ import annotations
+
 import multiprocessing
 from typing import Optional
 
@@ -16,6 +18,7 @@ from . import plot
 from .prior import Independent, Uniform, Prior
 from .rjmcmc import RJMCMC
 from .recorder import Recorder
+from .alias import ArrayLike
 
 
 class TGP:
@@ -60,10 +63,10 @@ class TGP:
 
     @classmethod
     def from_data(cls,
-                  x_data: np.typing.ArrayLike,
-                  y_data: np.typing.ArrayLike,
-                  noise: Optional[np.typing.ArrayLike] = None,
-                  x_predict: Optional[np.typing.ArrayLike] = None,
+                  x_data: ArrayLike,
+                  y_data: ArrayLike,
+                  noise: Optional[ArrayLike] = None,
+                  x_predict: Optional[ArrayLike] = None,
                   **kwargs):
         """
         Interface that makes generic modeling choices from data
@@ -119,13 +122,18 @@ class TGP:
         """
         return sum((t.acceptance for t in self.threads), Recorder())
 
-    @property
-    def arviz(self):
+    def to_arviz(self):
+        """
+        :return: Summary data in arviz format
+        """
+        summaries = np.stack([np.array(t.summaries) for t in self.threads])
+        return arviz.convert_to_dataset(summaries)
+
+    def arviz_summary(self):
         """
         :return: Summary of chains including ESS and R-hat
         """
-        summaries = np.stack([np.array(t.summaries) for t in self.threads])
-        return arviz.summary(arviz.convert_to_dataset(summaries))
+        return arviz.summary(self.to_arviz())
 
     @property
     def mean(self):

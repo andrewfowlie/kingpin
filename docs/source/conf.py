@@ -17,6 +17,7 @@ extensions = [
     'sphinx.ext.autodoc',
     'sphinx.ext.autosummary',
     'sphinx.ext.intersphinx',
+    "sphinx.ext.napoleon",
 ]
 
 intersphinx_mapping = {
@@ -33,3 +34,7 @@ html_theme = 'sphinx_rtd_theme'
 
 # -- Options for EPUB output
 epub_show_urls = 'footnote'
+
+autodoc_typehints = "description"
+autodoc_typehints_description_target = "all"
+autodoc_type_aliases = {"ArrayLike": "ArrayLike"}

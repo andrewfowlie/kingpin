@@ -1,6 +1,6 @@
 """
 RJ-MCMC implementation using the GP model and tree
-=================================================
+==================================================
 """
 
 from contextlib import nullcontext

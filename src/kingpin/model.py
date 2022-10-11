@@ -3,6 +3,7 @@ Model for RJ-MCMC Treed-GP
 ==========================
 """
 
+from __future__ import annotations
 
 from abc import ABC, abstractmethod
 from functools import lru_cache
@@ -11,16 +12,18 @@ import numpy as np
 
 import celerite2
 
+from .alias import ArrayLike
+
 
 class Model(ABC):
     """
     Gaussian process model of data
     """
 
-    def __init__(self, x_data: np.typing.ArrayLike,
-                 y_data: np.typing.ArrayLike,
-                 noise: Optional[np.typing.ArrayLike] = None,
-                 x_predict: Optional[np.typing.ArrayLike] = None):
+    def __init__(self, x_data: ArrayLike,
+                 y_data: ArrayLike,
+                 noise: Optional[ArrayLike] = None,
+                 x_predict: Optional[ArrayLike] = None):
         """
         :param x_data: Input locations
         :param y_data: Measurements
@@ -56,9 +59,9 @@ class Model(ABC):
         return min(self.where(self.x_data, i).sum() for i in intervals)
 
     @abstractmethod
-    def loglike_leaf(self, interval: np.typing.ArrayLike,
-                     params: np.typing.ArrayLike,
-                     systematic: np.typing.ArrayLike):
+    def loglike_leaf(self, interval: ArrayLike,
+                     params: ArrayLike,
+                     systematic: ArrayLike):
         """
         :param interval: Interval of this leaf
         :param params: Parameters for this leaf
@@ -68,9 +71,9 @@ class Model(ABC):
         """
 
     @abstractmethod
-    def pred_leaf(self, interval: np.typing.ArrayLike,
-                  params: np.typing.ArrayLike,
-                  systematic: np.typing.ArrayLike):
+    def pred_leaf(self, interval: ArrayLike,
+                  params: ArrayLike,
+                  systematic: ArrayLike):
         """
         :param interval: Interval of this leaf
         :param params: Parameters for this leaf
