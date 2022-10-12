@@ -1,6 +1,6 @@
 """
-Represent separable priors or proposal
-======================================
+Represent separable priors
+==========================
 """
 
 from abc import ABC, abstractmethod
@@ -8,7 +8,25 @@ import numpy as np
 from numpy import typing, log1p
 
 
-class CGM:
+class TreePrior(ABC):
+    """
+    Prior for tree structure
+    """
+
+    @abstractmethod
+    def log_pdf(self, subtree, subtree_depth):
+        """
+        :return: Log of splitting probability
+        """
+
+    @abstractmethod
+    def log_pdf_ratio(self, depth):
+        """
+        :return: Contribution to acceptance probability for grow
+        """
+
+
+class CGM(TreePrior):
     """
     CGM prior for tree structure
     """
@@ -116,32 +134,6 @@ class Normal(Prior):
         """
         delta = (other - self.mean)**2 - (params - self.mean)**2
         return -0.5 * np.sum(delta / self.sigma**2)
-
-
-class Proposal:
-    """
-    Fractional proposal
-    """
-
-    def __init__(self, frac):
-        """
-        :param frac: Fractional change in parameter
-        """
-        self.frac = frac
-
-    def rvs(self, params, random_state):
-        """
-        Random draw from uniform centered at current parameters
-        """
-        delta = np.abs(self.frac * params)
-        return params + random_state.uniform(-delta, delta)
-
-    @staticmethod
-    def log_pdf_ratio(params, other):
-        """
-        Log pdf ratio for fractional proposal
-        """
-        return np.log(np.abs(params) / np.abs(other)).sum()
 
 
 class Independent(Prior):

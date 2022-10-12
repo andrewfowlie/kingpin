@@ -15,7 +15,8 @@ import numpy as np
 
 from .model import Celerite2, Model
 from . import plot
-from .prior import Independent, Uniform, Prior
+from .prior import Independent, Uniform, Prior, TreePrior, CGM
+from .proposal import Proposal, FractionalProposal
 from .rjmcmc import RJMCMC
 from .recorder import Recorder
 from .alias import ArrayLike
@@ -31,27 +32,24 @@ class TGP:
                  params_prior: Prior,
                  systematic_prior: Optional[Prior] = None,
                  seed: Optional[int] = None,
-                 alpha: Optional[float] = 0.5,
-                 beta: Optional[float] = 2.,
                  change_scale_factor: Optional[float] = 2.,
-                 change_param_factor: Optional[float] = 0.05):
+                 tree_prior: Optional[TreePrior] = CGM(0.5, 2),
+                 proposal: Optional[Proposal] = FractionalProposal(0.05)):
         """
         :param model: Gaussian process model
         :param params_prior: Prior for Gaussian process model parameters
         :param systematic_prior: Prior for any systematic parameters
         :param seed: Seed for reproducible result
-        :param alpha: Parameter in CGM prior for tree
-        :param beta: Parameter in CGM prior for tree
         :param change_scale_factor: Scale of proposal for splitting rule
-        :param change_param_factor: Scale of proposal for parameters
+        :param tree_prior: Prior for tree
+        :param proposal: Proposal distribution function
         """
         self.model = model
         self.rjmcmc_args = [model, params_prior]
         self.rjmcmc_kwargs = dict(systematic_prior=systematic_prior,
-                                  alpha=alpha,
-                                  beta=beta,
-                                  change_param_factor=change_param_factor,
-                                  change_scale_factor=change_scale_factor)
+                                  change_scale_factor=change_scale_factor,
+                                  tree_prior=tree_prior,
+                                  proposal=proposal)
         self.seed_sequence = np.random.SeedSequence(seed)
         self.threads = None
 

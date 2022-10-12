@@ -19,6 +19,6 @@ def cli(file_name, seed):
     x_data, y_data = np.loadtxt(file_name, unpack=True)
     tgp = TGP.from_data(x_data, y_data, seed=seed)
     tgp.walk()
-    click.echo(tgp.arviz)
+    click.echo(tgp.arviz_summary())
     click.echo(tgp.acceptance)
     tgp.show()

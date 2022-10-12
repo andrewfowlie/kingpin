@@ -10,7 +10,8 @@ import numpy as np
 from tqdm import tqdm
 
 from . import draw
-from .prior import CGM, Proposal, Prior
+from .prior import TreePrior, CGM, Prior
+from .proposal import Proposal, FractionalProposal
 from .tree import Tree
 from .stack import Stack, get_screen_size
 from .recorder import Recorder
@@ -27,27 +28,25 @@ class RJMCMC:
                  params_prior: Prior,
                  systematic_prior: Optional[Prior] = None,
                  seed: Optional[int] = None,
-                 alpha: Optional[float] = 0.5,
-                 beta: Optional[float] = 2.,
                  change_scale_factor: Optional[float] = 2.,
-                 change_param_factor: Optional[float] = 0.05):
+                 tree_prior: Optional[TreePrior] = CGM(0.5, 2),
+                 proposal: Optional[Proposal] = FractionalProposal(0.05)):
         """
         :param model: Gaussian process model
         :param params_prior: Prior for Gaussian process model parameters
         :param systematic_prior: Prior for any systematic parameters
         :param seed: Seed for reproducible result
-        :param alpha: Parameter in CGM prior for tree
-        :param beta: Parameter in CGM prior for tree
         :param change_scale_factor: Scale of proposal for splitting rule
-        :param change_param_factor: Scale of proposal for parameters
+        :param tree_prior: Prior for tree
+        :param proposal: Proposal distribution function
         """
         self.model = model
         self.params_prior = params_prior
         self.systematic_prior = systematic_prior
         self.random_state = np.random.default_rng(seed)
-        self.tree_prior = CGM(alpha, beta)
         self.change_scale = change_scale_factor / len(self.model.x_data)
-        self.proposal = Proposal(change_param_factor)
+        self.tree_prior = tree_prior
+        self.proposal = proposal
         self.acceptance = Recorder()
 
         self.loglike = self.tree = self.systematic = None
