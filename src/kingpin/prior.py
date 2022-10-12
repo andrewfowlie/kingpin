@@ -3,9 +3,13 @@ Represent separable priors
 ==========================
 """
 
+from __future__ import annotations
+
 from abc import ABC, abstractmethod
 import numpy as np
-from numpy import typing, log1p
+from numpy import log1p
+
+from .alias import ArrayLike
 
 
 class TreePrior(ABC):
@@ -73,13 +77,13 @@ class Prior(ABC):
     Represent prior for model's parameters
     """
     @abstractmethod
-    def rvs(self, random_state, *args, **kwargs) -> typing.ArrayLike:
+    def rvs(self, random_state, *args, **kwargs) -> ArrayLike:
         """
         :return: Draw from prior
         """
 
     @abstractmethod
-    def log_pdf_ratio(self, params: typing.ArrayLike, other: typing.ArrayLike) -> float:
+    def log_pdf_ratio(self, params: ArrayLike, other: ArrayLike) -> float:
         """
         :return: Log pdf ratio of prior
         """
