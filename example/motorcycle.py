@@ -27,8 +27,8 @@ params = kp.Independent(mean, sigma, length, nugget)
 # Run RJ-MCMC
 
 rj = kp.TGP(model, params)
-rj.walk(thin=2, num_cores=1, n_iter=22000, n_burn=2000, n_iter_params=1, screen=False)
+rj.walk(thin=2, num_cores=1, n_iter=22000, n_burn=20000, n_iter_params=1, screen=False)
 
 print(rj.acceptance)
-print(rj.arviz)
+print(rj.arviz_summary())
 rj.show()
