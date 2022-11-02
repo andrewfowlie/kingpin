@@ -16,7 +16,7 @@ import numpy as np
 from .model import Celerite2, Model
 from . import plot
 from .prior import Independent, Uniform, Prior, TreePrior, CGM
-from .proposal import Proposal, FractionalProposal
+from .proposal import Proposal, TruncatedProposal, FractionalProposal
 from .rjmcmc import RJMCMC
 from .recorder import Recorder
 from .alias import ArrayLike
@@ -32,24 +32,27 @@ class TGP:
                  params_prior: Prior,
                  systematic_prior: Optional[Prior] = None,
                  seed: Optional[int] = None,
-                 change_scale_factor: Optional[float] = 2.,
                  tree_prior: Optional[TreePrior] = CGM(0.5, 2),
-                 proposal: Optional[Proposal] = FractionalProposal(0.05)):
+                 params_proposal: Optional[Proposal] = FractionalProposal(0.05),
+                 systematic_proposal: Optional[Proposal] = FractionalProposal(0.05),
+                 change_proposal: Optional[TruncatedProposal] = None):
         """
         :param model: Gaussian process model
-        :param params_prior: Prior for Gaussian process model parameters
-        :param systematic_prior: Prior for any systematic parameters
+        :param params_prior: Prior for leaf parameters
+        :param systematic_prior: Prior for systematic parameters
         :param seed: Seed for reproducible result
-        :param change_scale_factor: Scale of proposal for splitting rule
         :param tree_prior: Prior for tree
-        :param proposal: Proposal distribution function
+        :param params_proposal: Proposal for leaf parameters
+        :param systematic_proposal: Proposal for systematic parameters
+        :param change_proposal: Proposal for changing split parameters
         """
         self.model = model
         self.rjmcmc_args = [model, params_prior]
         self.rjmcmc_kwargs = dict(systematic_prior=systematic_prior,
-                                  change_scale_factor=change_scale_factor,
                                   tree_prior=tree_prior,
-                                  proposal=proposal)
+                                  params_proposal=params_proposal,
+                                  systematic_proposal=systematic_proposal,
+                                  change_proposal=change_proposal)
         self.seed_sequence = np.random.SeedSequence(seed)
         self.threads = None
 

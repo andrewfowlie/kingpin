@@ -38,12 +38,6 @@ class Model(ABC):
         self.x_predict = x_predict if x_predict is not None else x_data
         self.noise = noise if noise is not None else np.zeros_like(x_data)
 
-    def apply_systematic(self, systematic):
-        """
-        :return: Data adjusted by systematic effects
-        """
-        return self.noise, self.y_data
-
     def where(self, arr, interval):
         """
         :return: Partitions according to an interval
@@ -78,6 +72,7 @@ class Model(ABC):
         :param interval: Interval of this leaf
         :param params: Parameters for this leaf
         :param systematic: Systematic parameters common to all leaves
+
         :return: Mean and covariance for GP on one leaf
         """
 
@@ -125,8 +120,14 @@ class Model(ABC):
 
 class Celerite2(Model):
     """
-    Gaussian process model for hadronic cross sections
+    Gaussian process model using celerite2 library
     """
+    def apply_systematic(self, systematic):
+        """
+        :return: Data adjusted by systematic effects
+        """
+        return self.noise, self.y_data
+
     @lru_cache(maxsize=1)
     def gp_leaf(self, interval, params, systematic):
         """

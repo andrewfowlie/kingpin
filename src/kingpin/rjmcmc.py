@@ -11,7 +11,7 @@ from tqdm import tqdm
 
 from . import draw
 from .prior import TreePrior, CGM, Prior
-from .proposal import Proposal, FractionalProposal
+from .proposal import Proposal, TruncatedProposal, FractionalProposal, TruncatedGaussianProposal
 from .tree import Tree
 from .stack import Stack, get_screen_size
 from .recorder import Recorder
@@ -28,25 +28,32 @@ class RJMCMC:
                  params_prior: Prior,
                  systematic_prior: Optional[Prior] = None,
                  seed: Optional[int] = None,
-                 change_scale_factor: Optional[float] = 2.,
                  tree_prior: Optional[TreePrior] = CGM(0.5, 2),
-                 proposal: Optional[Proposal] = FractionalProposal(0.05)):
+                 params_proposal: Optional[Proposal] = FractionalProposal(0.05),
+                 systematic_proposal: Optional[Proposal] = FractionalProposal(0.05),
+                 change_proposal: Optional[TruncatedProposal] = None):
         """
         :param model: Gaussian process model
-        :param params_prior: Prior for Gaussian process model parameters
-        :param systematic_prior: Prior for any systematic parameters
+        :param params_prior: Prior for leaf parameters
+        :param systematic_prior: Prior for systematic parameters
         :param seed: Seed for reproducible result
-        :param change_scale_factor: Scale of proposal for splitting rule
         :param tree_prior: Prior for tree
-        :param proposal: Proposal distribution function
+        :param params_proposal: Proposal for leaf parameters
+        :param systematic_proposal: Proposal for systematic parameters
+        :param change_proposal: Proposal for changing split parameters
         """
         self.model = model
         self.params_prior = params_prior
         self.systematic_prior = systematic_prior
         self.random_state = np.random.default_rng(seed)
-        self.change_scale = change_scale_factor / len(self.model.x_data)
         self.tree_prior = tree_prior
-        self.proposal = proposal
+        self.params_proposal = params_proposal
+        self.systematic_proposal = systematic_proposal
+        self.change_proposal = change_proposal
+
+        if self.change_proposal is None:
+           self.change_proposal = TruncatedGaussianProposal(2. / len(self.model.x_data))
+
         self.acceptance = Recorder()
 
         self.loglike = self.tree = self.systematic = None
@@ -177,14 +184,14 @@ class RJMCMC:
             lower, upper = self.tree.interval(parent)
 
             original = parent.value
-            parent.value = draw.truncnorm(
-                lower, upper, parent.value, self.change_scale, self.random_state)
+            parent.value = self.change_proposal.rvs(parent.value, self.random_state, lower, upper)
             intervals = self.tree.intervals()
 
             if min_data_points == 0 or self.model.min_data_points(intervals) >= min_data_points:
                 loglike = self.model.loglike(
                     intervals, self.tree.params(), self.systematic)
                 log_alpha = loglike - self.loglike
+                log_alpha += self.change_proposal.log_pdf_ratio(original, parent.value, lower, upper)
                 accept = self.evaluate("change", log_alpha, loglike=loglike)
                 if not accept:
                     parent.value = original
@@ -275,12 +282,12 @@ class RJMCMC:
         Markov steps on systematic parameters
         """
         if self.systematic_prior:
-            systematic = self.proposal.rvs(self.systematic, self.random_state)
+            systematic = self.params_proposal.rvs(self.systematic, self.random_state)
             loglike = self.model.loglike(
                 self.tree.intervals(), self.tree.params(), systematic)
             log_alpha = (loglike - self.loglike
                          + self.systematic_prior.log_pdf_ratio(self.systematic, systematic)
-                         + self.proposal.log_pdf_ratio(self.systematic, systematic)
+                         + self.params_proposal.log_pdf_ratio(self.systematic, systematic)
                          )
             self.evaluate("systematic", log_alpha,
                           systematic=systematic, loglike=loglike)
@@ -294,9 +301,9 @@ class RJMCMC:
 
         for leaf_idx, leaf in enumerate(self.tree.leaves):
             node_params_original.append(leaf.node_params.copy())
-            leaf.node_params = self.proposal.rvs(
+            leaf.node_params = self.params_proposal.rvs(
                 leaf.node_params, self.random_state)
-            log_alpha += self.proposal.log_pdf_ratio(
+            log_alpha += self.params_proposal.log_pdf_ratio(
                 node_params_original[leaf_idx], leaf.node_params)
             log_alpha += self.params_prior.log_pdf_ratio(
                 node_params_original[leaf_idx], leaf.node_params)

@@ -6,6 +6,8 @@ Represent proposals
 from abc import ABC, abstractmethod
 import numpy as np
 
+from .draw import truncnorm
+
 
 class Proposal(ABC):
     """
@@ -64,10 +66,50 @@ class GaussianProposal(Proposal):
         """
         Random draw from Gaussian centered at current parameters
         """
-        return random_state.normal(params, self.scale * np.ones_like(params))
+        return random_state.normal(params, self.scale)
 
     @staticmethod
     def log_pdf_ratio(params, other):
+        """
+        Log pdf ratio for Gaussian proposal
+        """
+        return 0.
+
+class TruncatedProposal(ABC):
+    """
+    Abstract proposal
+    """
+    @abstractmethod
+    def rvs(self, params, random_state, lower, upper):
+        """
+        Random draw from proposal
+        """
+
+    @abstractmethod
+    def log_pdf_ratio(self, params, other, lower, upper):
+        """
+        Log pdf ratio for proposal
+        """
+
+class TruncatedGaussianProposal(TruncatedProposal):
+    """
+    Truncated Gaussian proposal
+    """
+
+    def __init__(self, scale):
+        """
+        :param scale: Scale parameter for Gaussian
+        """
+        self.scale = scale
+
+    def rvs(self, params, random_state, lower, upper):
+        """
+        Random draw from Gaussian centered at current parameters and truncated
+        """
+        return truncnorm(lower, upper, params, self.scale, random_state)
+
+    @staticmethod
+    def log_pdf_ratio(params, other, lower, upper):
         """
         Log pdf ratio for Gaussian proposal
         """
