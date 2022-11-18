@@ -101,17 +101,18 @@ class TGP:
         thread.walk(*args, **kwargs)
         return thread
 
-    def walk(self, num_cores=None, **kwargs) -> None:
+    def walk(self, n_cores=None, **kwargs) -> None:
         """
         Multiple RJ-MCMC walks
         """
-        num_cores = num_cores if num_cores else multiprocessing.cpu_count()
-        seeds = self.seed_sequence.spawn(num_cores)
+        n_cores = n_cores if n_cores else multiprocessing.cpu_count()
+        seeds = self.seed_sequence.spawn(n_cores)
+        screen = kwargs.pop('screen', False)
 
-        if num_cores == 1:
-            self.threads = [self.thread(seeds[0], **kwargs)]
+        if n_cores == 1:
+            self.threads = [self.thread(seeds[0], screen=screen, **kwargs)]
         else:
-            self.threads = Parallel(n_jobs=num_cores)(
+            self.threads = Parallel(n_jobs=n_cores)(
                 delayed(self.thread)(
                     seed, screen=False, position=i, **kwargs)
                 for i, seed in enumerate(seeds))
