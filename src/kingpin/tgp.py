@@ -71,6 +71,11 @@ class TGP:
                   **kwargs):
         """
         Interface that makes generic modeling choices from data
+
+        :param x_data: Input locations
+        :param y_data: Measurements
+        :param noise: Diagonal measurement error
+        :param x_predict: Locations of predictions
         """
         model = Celerite2(x_data, y_data, noise, x_predict)
 

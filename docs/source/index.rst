@@ -17,7 +17,7 @@ BibTeX
   :language: bibtex
 
 API
-===
+^^^
 
 .. toctree::
-   api
+  api
