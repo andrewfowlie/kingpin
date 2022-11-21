@@ -122,12 +122,6 @@ class Celerite2(Model):
     """
     Gaussian process model using celerite2 library
     """
-    def apply_systematic(self, systematic):
-        """
-        :return: Data adjusted by systematic effects
-        """
-        return self.noise, self.y_data
-
     @lru_cache(maxsize=1)
     def gp_leaf(self, interval, params, systematic):
         """
@@ -138,7 +132,6 @@ class Celerite2(Model):
         :return: Log probability, mean and coviance for GP on one leaf
         """
         where = self.where(self.x_data, interval)
-        noise = self.apply_systematic(systematic)[0]
 
         if len(params) == 3:
             mean, sigma, length = params
@@ -149,7 +142,7 @@ class Celerite2(Model):
         kernel = celerite2.terms.Matern32Term(
             sigma=np.abs(sigma), rho=np.abs(length))
         gp_leaf = celerite2.GaussianProcess(kernel, mean=mean)
-        gp_leaf.compute(self.x_data[where], yerr=noise[where] + np.abs(nugget))
+        gp_leaf.compute(self.x_data[where], yerr=self.noise[where] + np.abs(nugget))
         return gp_leaf
 
     @lru_cache(maxsize=32)
@@ -162,9 +155,8 @@ class Celerite2(Model):
         :return: Log probability, mean and coviance for GP on one leaf
         """
         gp_leaf = self.gp_leaf(interval, params, systematic)
-        y_data = self.apply_systematic(systematic)[1]
 
-        y_data = y_data[self.where(self.x_data, interval)]
+        y_data = self.y_data[self.where(self.x_data, interval)]
         where = self.where(self.x_predict, interval)
 
         mean, cov = gp_leaf.predict(
@@ -191,8 +183,7 @@ class Celerite2(Model):
 
         :return: Log probability, mean and coviance for GP on one leaf
         """
-        y_data = self.apply_systematic(systematic)[1]
-        y_data = y_data[self.where(self.x_data, interval)]
+        y_data = self.y_data[self.where(self.x_data, interval)]
         try:
             return self.gp_leaf(interval, params, systematic).log_likelihood(y_data)
         # pylint: disable-next=c-extension-no-member

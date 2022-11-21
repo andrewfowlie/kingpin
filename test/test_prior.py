@@ -21,18 +21,17 @@ class TestPriors(unittest.TestCase):
         rvs = n.rvs(state)
         log_pdf_ratio = n.log_pdf_ratio(1, 0)
         self.assertAlmostEqual(rvs, 1.6243453636632417, 6)
-        self.assertEqual(log_pdf_ratio, 0.5)   
- 
+        self.assertEqual(log_pdf_ratio, 0.5)
+
     def test_uniform(self):
         state = np.random.RandomState(1)
         u = Uniform(10, 100)
         rvs = u.rvs(state)
         log_pdf_ratio = u.log_pdf_ratio(50, 60)
         self.assertAlmostEqual(rvs, 47.53198042323166, 6)
-        self.assertEqual(log_pdf_ratio, 0.)  
+        self.assertEqual(log_pdf_ratio, 0.)
 
     def test_cgm(self):
-        state = np.random.RandomState(1)
         cgm = CGM(0.5, 0.75)
         log_pdf_ratio = cgm.log_pdf_ratio(5)
         log_pdf = cgm.log_pdf(left_tree(), 3)
