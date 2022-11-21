@@ -4,6 +4,7 @@ Unit testing of TGP
 """
 
 
+import os
 import unittest
 import numpy as np
 from matplotlib.testing.compare import compare_images
@@ -53,7 +54,8 @@ class TestCelerite2(unittest.TestCase):
     def test_savefig(self):
         mpl_setup()
         rj.savefig("test.png")
-        self.assertIsNone(compare_images("test.png", "expected.png", tol=10))
+        expected = os.path.join(os.path.dirname(__file__), "expected.png")
+        self.assertIsNone(compare_images("test.png", expected, tol=10))
 
 if __name__ == '__main__':
     unittest.main()
