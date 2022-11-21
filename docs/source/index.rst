@@ -1,19 +1,23 @@
 Welcome to kingpin's documentation!
 ===================================
 
-**kingpin** is a Python library for treed Gaussian processes.
+.. include :: ../../README.md
+   :parser: myst_parser.sphinx_
 
-Check out the :doc:`usage` section for further information, including
-how to :ref:`installation` the project.
+References
+^^^^^^^^^^
 
-.. note::
+.. bibliography::
+   :all:
 
-   This project is under active development.
+BibTeX
+^^^^^^
 
-Contents
---------
+.. literalinclude:: ../../CITATION.bib
+  :language: bibtex
+
+API
+===
 
 .. toctree::
-
-   usage
    api

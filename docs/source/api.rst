@@ -1,15 +1,10 @@
-API
-===
-
 .. autoclass:: kingpin.RJMCMC
-   :members: walk
+   :members: walk, step
 
 .. autoclass:: kingpin.TGP
-   :members: walk, show, savetxt, to_arviz, arviz_summary, from_data, mean, stdev, cov
+   :members: walk, show, savefig, savetxt, to_arviz, arviz_summary, from_data, mean, stdev, cov, acceptance
 
-.. autoclass:: kingpin.Model
 .. autoclass:: kingpin.Celerite2
 .. autoclass:: kingpin.Normal
 .. autoclass:: kingpin.Uniform
-.. autoclass:: kingpin.Prior
 .. autoclass:: kingpin.Independent

@@ -97,6 +97,9 @@ class Uniform(Prior):
     def __init__(self, lower, upper):
         """
         Interval for distribution
+
+        :param lower: Lower edge of interval
+        :param upper: Upper edge of interval
         """
         self.lower, self.upper = lower, upper
 
@@ -123,6 +126,9 @@ class Normal(Prior):
     def __init__(self, mean, sigma):
         """
         Interval for distribution
+
+        :param mean: Mean of normal
+        :param sigma: Standard deviation of normal
         """
         self.mean, self.sigma = mean, sigma
 
@@ -147,7 +153,7 @@ class Independent(Prior):
 
     def __init__(self, *prior):
         """
-        :param *params: Pairs of prior and proposal distributions
+        :param prior: Prior distributions
         """
         self._log_pdf_ratio = [p.log_pdf_ratio for p in prior]
         self._rvs = [p.rvs for p in prior]

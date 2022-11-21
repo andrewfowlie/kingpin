@@ -28,7 +28,7 @@ length = kp.Uniform(0., 10.)
 params = kp.Independent(mean, sigma, length)
 
 rj = kp.TGP(model, params, seed=1)
-rj.walk(n_iter=100, n_burn=10, n_cores=1)
+rj.walk(n_iter=100, n_burn=10, n_threads=1)
 
 
 class TestCelerite2(unittest.TestCase):
@@ -48,7 +48,7 @@ class TestCelerite2(unittest.TestCase):
 
     def test_from_data(self):
         fd = kp.TGP.from_data(x, y, seed=1)
-        fd.walk(n_iter=100, n_burn=10, n_cores=1)
+        fd.walk(n_iter=100, n_burn=10, n_threads=1)
         self.assertAlmostEqual(fd.mean[50], 25.023031491400552, 6)
 
     def test_savefig(self):

@@ -112,6 +112,12 @@ class RJMCMC:
              **kwargs):
         """
         Multiple RJ-MCMC steps
+
+        :param n_iter: Number of iterations to perform
+        :param n_burn: Number of iterations to burn
+        :param thin: Thin chain by this factor - efficient as avoids computing GP predictions
+        :param screen: Show detailed state of tree on screen
+        :param position: Position of status bar on screen 
         """
         if screen:
             stack = Stack()
@@ -165,6 +171,9 @@ class RJMCMC:
         """
         One step, which is a round of trans-dimensional
         and ordinary Markov moves
+
+        :param n_iter_params: Number of parameter iterations per step
+        :param min_data_points: Minimum number of data points per leaf
         """
         self.grow_step(min_data_points)
         self.prune_step()

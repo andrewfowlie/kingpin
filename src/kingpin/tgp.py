@@ -101,17 +101,20 @@ class TGP:
         thread.walk(*args, **kwargs)
         return thread
 
-    def walk(self, n_cores=None, screen=False, **kwargs) -> None:
+    def walk(self, n_threads=None, screen=False, **kwargs) -> None:
         """
         Multiple RJ-MCMC walks
-        """
-        n_cores = n_cores if n_cores else multiprocessing.cpu_count()
-        seeds = self.seed_sequence.spawn(n_cores)
 
-        if n_cores == 1:
+        :param n_threads: Number of threads
+        :param screen: Show detailed state of tree on screen
+        """
+        n_threads = n_threads if n_threads else multiprocessing.cpu_count()
+        seeds = self.seed_sequence.spawn(n_threads)
+
+        if n_threads == 1:
             self.threads = [self.thread(seeds[0], screen=screen, **kwargs)]
         else:
-            self.threads = Parallel(n_jobs=n_cores)(
+            self.threads = Parallel(n_jobs=n_threads)(
                 delayed(self.thread)(
                     seed, screen=False, position=i, **kwargs)
                 for i, seed in enumerate(seeds))
@@ -119,7 +122,7 @@ class TGP:
     @property
     def acceptance(self):
         """
-        :return: Aggregate acceptance information
+        Aggregated acceptance information
         """
         return sum((t.acceptance for t in self.threads), Recorder())
 
@@ -139,21 +142,21 @@ class TGP:
     @property
     def mean(self):
         """
-        :return: Aggregated model prediction for mean
+        Aggregated model prediction for mean
         """
         return np.mean([t.mean for t in self.threads], axis=0)
 
     @property
     def stdev(self):
         """
-        :return: Aggregated model prediction for standard deviation
+        Aggregated model prediction for standard deviation
         """
         return np.diag(self.cov)**0.5
 
     @property
     def cov(self):
         """
-        :return: Aggregated model prediction for covariance
+        Aggregated model prediction for covariance
         """
         second_moments = np.mean(
             [t.second_moments for t in self.threads], axis=0)
@@ -162,7 +165,7 @@ class TGP:
     @property
     def edge_counts(self):
         """
-        :return: Aggregated edge counts
+        Aggregated edge counts
         """
         return np.sum([t.edge_counts for t in self.threads], axis=0)
 

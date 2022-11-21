@@ -30,7 +30,7 @@ params = kp.Independent(mean, sigma, length)
 # Run RJ-MCMC
 
 rj = kp.TGP(model, params)
-rj.walk(n_cores=1, n_iter=1000, n_burn=500)
+rj.walk(n_threads=1, n_iter=1000, n_burn=500)
 
 print(rj.acceptance)
 print(rj.arviz_summary())

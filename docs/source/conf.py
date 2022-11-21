@@ -18,7 +18,12 @@ extensions = [
     'sphinx.ext.autosummary',
     'sphinx.ext.intersphinx',
     "sphinx.ext.napoleon",
+    "myst_parser",
+    "sphinxcontrib.bibtex",
 ]
+
+bibtex_bibfiles = ['../../CITATION.bib']
+bibtex_default_style = 'unsrt'
 
 intersphinx_mapping = {
     'python': ('https://docs.python.org/3/', None),
@@ -36,5 +41,8 @@ html_theme = 'sphinx_rtd_theme'
 epub_show_urls = 'footnote'
 
 autodoc_typehints = "description"
-autodoc_typehints_description_target = "all"
+autodoc_typehints_description_target = "documented"
 autodoc_type_aliases = {"ArrayLike": "ArrayLike"}
+autodoc_typehints_format = "short"
+autodoc_inherit_docstrings = True
+autoclass_content = "init"
