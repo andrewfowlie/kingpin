@@ -6,6 +6,8 @@ Unit testing of TGP
 
 import unittest
 import numpy as np
+from matplotlib.testing.compare import compare_images
+from matplotlib.testing import setup as mpl_setup
 
 import kingpin as kp
 
@@ -47,6 +49,11 @@ class TestCelerite2(unittest.TestCase):
         fd = kp.TGP.from_data(x, y, seed=1)
         fd.walk(n_iter=100, n_burn=10, n_cores=1)
         self.assertAlmostEqual(fd.mean[50], 25.023031491400552, 6)
+
+    def test_savefig(self):
+        mpl_setup()
+        rj.savefig("test.png")
+        self.assertIsNone(compare_images("test.png", "expected.png", tol=10))
 
 if __name__ == '__main__':
     unittest.main()
