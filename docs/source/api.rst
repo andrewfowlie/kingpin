@@ -12,7 +12,15 @@ Building GP models
 
 .. autoclass:: kingpin.Model
 .. autoclass:: kingpin.Celerite2
-.. autoclass:: kingpin.Prior
 .. autoclass:: kingpin.Normal
 .. autoclass:: kingpin.Uniform
 .. autoclass:: kingpin.Independent
+
+Types
+=====
+
+.. autoclass:: kingpin.alias.ArrayLike
+.. autoclass:: kingpin.TreePrior
+.. autoclass:: kingpin.Prior
+.. autoclass:: kingpin.Proposal
+.. autoclass:: kingpin.TruncatedProposal

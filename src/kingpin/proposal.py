@@ -11,7 +11,7 @@ from .draw import truncnorm
 
 class Proposal(ABC):
     """
-    Abstract proposal
+    Proposal distribution for e.g. model parameters
     """
     @abstractmethod
     def rvs(self, params, random_state):
@@ -77,7 +77,7 @@ class GaussianProposal(Proposal):
 
 class TruncatedProposal(ABC):
     """
-    Abstract proposal
+    Truncated proposal distribution for e.g. splitting rule
     """
     @abstractmethod
     def rvs(self, params, random_state, lower, upper):

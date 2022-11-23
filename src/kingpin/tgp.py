@@ -106,7 +106,7 @@ class TGP:
         thread.walk(*args, **kwargs)
         return thread
 
-    def walk(self, n_threads=None, screen=False, **kwargs) -> None:
+    def walk(self, n_threads: Optional[int] = None, screen: Optional[bool] = False, **kwargs) -> None:
         """
         Multiple RJ-MCMC walks
 
@@ -192,13 +192,17 @@ class TGP:
     def savefig(self, filename: str, *args, **kwargs) -> None:
         """
         Save plot of predictions
+
+        :param filename: File name for figure
         """
         self.plot(*args, **kwargs)
         plt.savefig(filename)
 
     def savetxt(self, filename: str) -> None:
         """
-        Saves predictions to disk
+        Saves mean and standard deviations to disk
+
+        :param filename: File name for text file of data
         """
         np.savetxt(filename, np.array(
             [self.mean, self.stdev]).T, header="mean st.dev")
