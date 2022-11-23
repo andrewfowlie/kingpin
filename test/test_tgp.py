@@ -57,5 +57,6 @@ class TestCelerite2(unittest.TestCase):
         expected = os.path.join(os.path.dirname(__file__), "expected.png")
         self.assertIsNone(compare_images("test.png", expected, tol=10))
 
+
 if __name__ == '__main__':
     unittest.main()

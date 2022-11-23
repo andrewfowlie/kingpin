@@ -26,5 +26,6 @@ class TestRecorder(unittest.TestCase):
         r = r1 + r2
         self.assertEqual(str(r), 'e = 0.200. f = 0.412')
 
+
 if __name__ == '__main__':
     unittest.main()

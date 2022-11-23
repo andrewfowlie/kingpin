@@ -30,5 +30,6 @@ class TestCelerite2(unittest.TestCase):
         self.assertAlmostEqual(mean[50], 10.063686391528414, 6)
         self.assertAlmostEqual(cov[20, 21], 3.999796214986958, 6)
 
+
 if __name__ == '__main__':
     unittest.main()

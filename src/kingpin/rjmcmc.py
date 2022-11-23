@@ -52,7 +52,7 @@ class RJMCMC:
         self.change_proposal = change_proposal
 
         if self.change_proposal is None:
-           self.change_proposal = TruncatedGaussianProposal(2. / len(self.model.x_data))
+            self.change_proposal = TruncatedGaussianProposal(2. / len(self.model.x_data))
 
         self.acceptance = Recorder()
 
@@ -117,7 +117,7 @@ class RJMCMC:
         :param n_burn: Number of iterations to burn
         :param thin: Thin chain by this factor - efficient as avoids computing GP predictions
         :param screen: Show detailed state of tree on screen
-        :param position: Position of status bar on screen 
+        :param position: Position of status bar on screen
         """
         if screen:
             stack = Stack()

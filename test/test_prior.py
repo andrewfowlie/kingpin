@@ -12,7 +12,6 @@ from kingpin.prior import CGM
 from test_tree import left_tree
 
 
-
 class TestPriors(unittest.TestCase):
 
     def test_normal(self):

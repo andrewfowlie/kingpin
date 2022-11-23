@@ -93,5 +93,6 @@ class TestTree(unittest.TestCase):
         str_ = str(left_tree())
         self.assertEqual(str_, STR)
 
+
 if __name__ == '__main__':
     unittest.main()

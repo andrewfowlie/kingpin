@@ -25,6 +25,7 @@ class Proposal(ABC):
         Log pdf ratio for proposal
         """
 
+
 class FractionalProposal(Proposal):
     """
     Fractional proposal
@@ -75,6 +76,7 @@ class GaussianProposal(Proposal):
         """
         return 0.
 
+
 class TruncatedProposal(ABC):
     """
     Truncated proposal distribution for e.g. splitting rule
@@ -90,6 +92,7 @@ class TruncatedProposal(ABC):
         """
         Log pdf ratio for proposal
         """
+
 
 class TruncatedGaussianProposal(TruncatedProposal):
     """
