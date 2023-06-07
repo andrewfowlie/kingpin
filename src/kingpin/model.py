@@ -42,8 +42,16 @@ class Model(ABC):
         """
         :return: Partitions according to an interval
         """
-        lower = interval[0] * self.x_data_delta + self.x_data_min
-        upper = interval[1] * self.x_data_delta + self.x_data_min
+        if interval[0] <= 0.:
+            lower = -np.inf
+        else:
+            lower = interval[0] * self.x_data_delta + self.x_data_min
+
+        if interval[1] >= 1.:
+            upper = np.inf
+        else:
+            upper = interval[1] * self.x_data_delta + self.x_data_min
+
         return (arr <= upper) & (arr >= lower)
 
     def min_data_points(self, intervals):
