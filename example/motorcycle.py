@@ -9,7 +9,6 @@ import kingpin as kp
 # Data and points for prediction
 
 x, y = np.loadtxt("motorcycle.txt", unpack=True)
-y -= y.min()
 p = np.linspace(x.min(), x.max(), 301)
 
 # Bespoke choices
