@@ -4,3 +4,10 @@ requires = [
     "wheel"
 ]
 build-backend = "setuptools.build_meta"
+
+[project]
+name = "kingpin-tgp"
+authors = [{ name = "Andrew Fowlie", email = "andrew.fowlie@xjtlu.edu.cn" }]
+readme = "README.md"
+license = { file = "LICENSE" }
+dynamic = ["version", "description"]

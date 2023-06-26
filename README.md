@@ -10,7 +10,7 @@ _👀 Treed Gaussian process algorithm_
 ## Install 💥
 
 ```bash
-pip install .
+pip install kingpin-tgp
 ```
 
 ## Demo
