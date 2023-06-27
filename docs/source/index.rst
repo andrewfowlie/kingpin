@@ -7,7 +7,7 @@ Welcome to kingpin's documentation!
 Theory
 ^^^^^^
 
-We implement a treed Gaussian process (GP) algorithm :cite:`tgp` in Python. A treed GP automatically partitions the input space and trains a GP in each partition. This allows us to model non-stationary data, heteroscedastic noise and divide and conquer large datasets. The GP hyperparameters and the number and locations of divisions are marginalsed using recursive-jump MCMC.
+We implement a treed Gaussian process (TGP) algorithm :cite:`tgp` in Python. A TGP automatically partitions the input space and trains a GP in each partition. This allows us to model non-stationary data, heteroscedastic noise and divide and conquer large datasets. The GP hyperparameters and the number and locations of divisions are marginalised using recursive-jump MCMC.
 
 Example
 ^^^^^^^
@@ -36,13 +36,13 @@ and choose prediction points
 
     p = np.linspace(x.min(), x.max(), 201)
 
-Now we are ready to make our TGP model. We use the `from_data` constructor. This means that hyperparameter and tree modelling choices are based on peaking at the data
+Now we are ready to make our TGP model. We use the `from_data` constructor. This means that hyperparameter and tree modelling choices are based on peeking at the data
 
 .. code-block:: python
 
     tgp = kp.TGP.from_data(x, y, noise, p)
 
-Alternatively, all aspects of the model can be chosen by hand. Now we run RJ-MCMC to marginalize the hyperparameters and tree structure
+Alternatively, all aspects of the model can be chosen by hand. Now we run RJ-MCMC to marginalise the hyperparameters and tree structure
 
 .. code-block:: python
 
@@ -63,6 +63,12 @@ and diagnostics
     tgp.acceptance
     tgp.arviz_summary()
 
+More examples
+^^^^^^^^^^^^^
+
+.. toctree::
+  examples
+
 BibTeX
 ^^^^^^
 
@@ -80,5 +86,4 @@ References
 
 .. bibliography::
    :all:
-
 

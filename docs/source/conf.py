@@ -24,9 +24,9 @@ extensions = [
     'sphinx.ext.autodoc',
     'sphinx.ext.autosummary',
     'sphinx.ext.intersphinx',
-    "sphinx.ext.napoleon",
-    "myst_parser",
-    "sphinxcontrib.bibtex",
+    'sphinx.ext.napoleon',
+    'myst_parser',
+    'sphinxcontrib.bibtex',
 ]
 
 bibtex_bibfiles = ['../../CITATION.bib']
